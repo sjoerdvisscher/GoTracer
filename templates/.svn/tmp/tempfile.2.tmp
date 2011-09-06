@@ -1,0 +1,79 @@
+<title>Go Tracer</title>
+<style>html, body {margin:0; padding:0; text-align: center;}</style>
+<link href="css/gotracer.css" rel="stylesheet" />
+<script src="js/gotracer.js"></script>
+<script src="js/preview.js"></script>
+<body>
+  <h1>Go Tracer</h1>
+  <form>
+    <input type="text" class="image-url" name="image" value="{{ image }}" />
+    <button type="submit" class="trace-button" >load</button>
+<<<<<<< .mine
+    <button class="download-button" onclick="location = 'game.sgf?'+goTracer.getSGF(); return false;">Open in KGS</button>
+=======
+    <button class="download-button" onclick="location = 'game.sgf?(;AB'+blackCoords.join('')+'AW'+whiteCoords.join('')+')'; return false;">get .sgf</button>
+>>>>>>> .r397
+  </form>
+  <table cellpadding="5" class="canvases">
+    <tr>
+      <td rowspan="2">
+        <canvas width="900" height="600"></canvas>
+      </td>
+      <td>
+          <canvas id="colorPlot" width="512" height="256"></canvas>
+      </td>
+    </tr>
+    <tr>  
+      <td>
+          <canvas id="preview" style="background:yellow;" width="200" height="200"></canvas>
+      </td>
+    <tr>
+  </table>
+</body>
+<script>
+var url = "{{ image }}";
+var canvas = document.getElementsByTagName('canvas')[0];
+var canvas2 = document.getElementsByTagName('canvas')[1];
+var preview = new Preview(document.getElementById("preview"));
+
+var img = new Image();
+img.onload = function() {
+  goTracer.startScan();
+  preview.update(goTracer);
+};
+
+img.onerror = function() { 
+  alert("Cannot load image: " + url);
+}; 
+if (url)
+  img.src = "/fetch?" + url;
+
+var goTracer = new GoTracer(img, canvas, canvas2);
+
+var mouseDown = false
+canvas.addEventListener("mousedown", function(e) { mouseDown = true }, false);
+canvas.addEventListener("mouseup", function(e) { mouseDown = false }, false);
+canvas.addEventListener("mousemove", function(e) {
+  if (!mouseDown)
+    return;
+  
+  handleClick(e);
+  }, false);
+
+canvas.addEventListener("click", handleClick, false);
+
+function handleClick(e)
+{
+  var x = e.clientX + document.body.scrollLeft;
+  var y = e.clientY + document.body.scrollTop;
+  for (var el = canvas; el; el = el.offsetParent)
+  {
+    x -= el.offsetLeft;
+    y -= el.offsetTop;
+  }
+  goTracer.updateNearestCorner(x / canvas.offsetWidth * canvas.width, y / canvas.offsetHeight * canvas.height);
+  goTracer.startScan();
+  preview.update(goTracer);
+}
+
+</script>

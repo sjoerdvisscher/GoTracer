@@ -1,0 +1,141 @@
+*
+{
+  font-family: Arial;
+}
+
+body
+{
+  color: #444444;
+  background: #F1F5FA;
+}
+
+h1
+{
+  color: #444444;
+  margin: 0; padding: 0.2em;
+}
+
+
+
+.step
+{
+  color: #444444;
+  margin:0;
+}
+
+.step .number
+{
+  font-weight:bold;
+  color: #999999;
+}
+
+form
+{ 
+  z-index:1;
+  background: #FFF9D8;
+  border-top: 1px solid #FFE8CD;
+  border-bottom: 1px solid #FFE8CD;
+  padding: 1em; margin: 0;
+  margin-bottom:10px;
+}
+
+td
+{
+  vertical-align: top;
+}
+
+.image-url
+{
+  font-size:150%;
+  width: 800px;
+}
+
+.trace-button,
+.download-button
+{
+  font-size:150%;
+}
+
+#canvases
+{
+  margin-left: auto;
+  margin-right: auto;
+  display: none;
+}
+
+#image
+{
+  border: 1px solid #aaaaaa;
+}
+
+.plotContainer
+{
+    background-color: #d1d5dA;
+      padding: 5px 5px 5px 5px; 
+}
+
+.plotHeader
+{
+  font-size: 100%;
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+#colorPlot
+{
+  border: 1px solid #aaaaaa;
+  width: 100px;
+  height: 100px;
+  float:left;
+  margin-right: 5px;
+}
+
+.plotExplanation
+{
+  margin-top: 5px;
+  font-size: 80%;
+  width: 200px;
+
+}
+
+#preview-background
+{
+  border: 1px solid #aaaaaa;
+  background-image: url('../images/blank_board.png');
+  width: 200px;
+  height: 200px;
+}
+#preview
+{
+  position: absolute;
+  margin-top: -200px;
+}
+
+#preview:hover
+{
+  cursor: hand;
+}
+
+a
+{
+  color: #444444;
+}
+
+a.download
+{
+  font-size:90%;
+  color: #444444;
+  xfont-style:italic;
+}
+
+.footer
+{
+  z-index:1;
+  background: #FFF9D8;
+  color: #444444;
+  border-top: 1px solid #FFE8CD;
+  border-bottom: 1px solid #FFE8CD;
+  padding: 1em; margin: 0;
+  margin-bottom:10px;
+  font-size: 90%;
+}

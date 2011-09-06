@@ -1,0 +1,139 @@
+<title>Go Tracer</title>
+<style>html, body {margin:0; padding:0; text-align: center;}</style>
+<link href="css/gotracer.css" rel="stylesheet" />
+<script src="js/gotracer.js"></script>
+<script src="js/preview.js"></script>
+
+<body onload="goTracer.startScan(); preview.update(goTracer);">
+
+  <form>
+    <h2 class="step"><span class="number">1. </span>Enter the URL of an image of a go board</h2><br/>
+    <input type="text" class="image-url" name="image" value="{{ image }}" title="enter the url of the image" />
+    <button type="submit" class="trace-button" title="click to load the image">load</button>
+  </form>
+  
+  
+  <table id="canvases" cellpadding="5" class="canvases">
+    <tr>
+      <td rowspan="2">
+        <h2 class="step"><span class="number">2. </span>Adjust the corners</h2>
+        <canvas id="image" width="900" height="600" title="click or drag to adjust the corners"></canvas>
+      </td>
+      <td>
+        <h2 class="step"><span class="number">3. </span>Download</h2>
+        <div id="preview-background"></div>
+        <canvas id="preview" title="download .sgf file" width="200" height="200" title="preview" onclick="location = 'game.sgf?'+goTracer.getSGF(); return false;"></canvas>
+        <br/>
+        <a class="download" href="#" onclick="location = 'game.sgf?'+goTracer.getSGF(); return false;">download .sgf file</a>
+      </td>
+    </tr>
+    <tr>  
+      <td>
+        <div class="plotContainer">
+        <h3 class="plotHeader">color plot</h3>
+          <p class="plotExplanation">
+            <canvas id="colorPlot" width="128" height="256" title="color plot"></canvas>
+            This plot shows each of the 361 sample points of the superimposed grid in color space. The x-axis represents intensity while the y-axis
+            represents hue.
+            The darkest points, to the left, are interpreted as black stones whereas the lightest points, to the right, are taken to be  white stones. 
+            The third group of points at the bottom, which have the most color, must be vacant points.
+            If each group is nicely separated from the other groups, the trace will contain no errors.
+          </p>
+          </div>
+      </td>
+    <tr>
+  </table>
+  
+  <div class="footer">
+     compatibility: Firefox 3+, Safari 4 beta, Google Chrome 2 beta (because of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#pixel-manipulation">getImageData</a>)
+     |  
+     <a href="mailto:info.gotracer@gmail.com">info.gotracer@gmail.com</a>
+  </div>
+</body>
+<script>
+// sorry Sjoerd... I'm just really lazy :-)
+function $(id) {
+    return document.getElementById(id);
+}
+
+var url = "{{ image }}";
+var canvas = document.getElementsByTagName('canvas')[0];
+var canvas2 = $("colorPlot");
+var preview = new Preview($("preview"));
+
+var img = new Image();
+img.onerror = function() { 
+  alert("Cannot load image: " + url);
+};
+
+img.onload = function() {
+  $("canvases").style.display = "block";
+}
+
+if (url)
+  img.src = "/fetch?" + url;
+
+var crosshair = new Image();
+crosshair.src = "images/crosshairs.gif";
+
+var goTracer = new GoTracer(img, canvas, canvas2, crosshair);
+
+var coords = document.location.hash.substr(1).split(",");
+if (coords.length == 8)
+  goTracer.corners = [
+    new Point(1*coords[0], 1*coords[1]),
+    new Point(1*coords[2], 1*coords[3]),
+    new Point(1*coords[4], 1*coords[5]),
+    new Point(1*coords[6], 1*coords[7])
+  ]
+
+canvas.addEventListener("mousedown", handleDown, false);
+canvas.addEventListener("mouseup", handleUp, false);
+canvas.addEventListener("mousemove", handleMove, false);
+canvas.addEventListener("click", function(e) { handleDown(e); handleUp(e)}, false);
+
+function getCoords(e)
+{
+  var x = e.clientX + document.body.scrollLeft;
+  var y = e.clientY + document.body.scrollTop;
+
+  var screenx = x;
+  var screeny = y;
+  
+  for (var el = canvas; el; el = el.offsetParent)
+  {
+    x -= el.offsetLeft;
+    y -= el.offsetTop;
+  }
+
+  return {
+    x: x / canvas.offsetWidth * canvas.width,
+    y: y / canvas.offsetHeight * canvas.height
+  }
+}
+
+var currentCorner = null;
+function handleDown(e)
+{
+  var p = getCoords(e);
+  currentCorner = goTracer.getNearestCorner(p.x, p.y);
+  handleMove(e);
+}
+function handleMove(e)
+{
+  if (!currentCorner)
+    return;
+    
+  var p = getCoords(e);
+  currentCorner.x = p.x;
+  currentCorner.y = p.y;
+  
+  goTracer.startScan();
+  preview.update(goTracer);
+  location = "#" + goTracer.corners;
+}
+function handleUp(e)
+{
+  currentCorner = null;
+}
+</script>
