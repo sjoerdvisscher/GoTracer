@@ -46,7 +46,6 @@ GoTracer.prototype.startScan = function()
   this.quickPartition(sets, 50);
   this.partition(sets, 3);
   this.assignSets(sets);
-  
   this.drawCrosshairs();
 };
 GoTracer.prototype.drawImage = function()
@@ -202,6 +201,11 @@ GoTracer.prototype.assignSets = function(sets)
   this.whiteSet.drawDebug(this.debugCtx, "rgb(160,160,160)");
   this.boardSet.drawDebug(this.debugCtx, "rgb(255,160,64)");
 };
+GoTracer.prototype.getMatch = function()
+{
+  return 1/3 * ( this.blackSet.getSpread() + this.whiteSet.getSpread() + this.boardSet.getSpread() );
+}
+
 GoTracer.prototype.getSGF = function()
 {
   var blackCoords = this.blackSet.points.map(function(pt) { return pt.coord; })
@@ -331,6 +335,14 @@ PointSet.prototype.drawDebug = function(ctx, color)
   // ctx.fillStyle = "green";
   // ctx.fillRect(this.y/2 - 1, this.x/2 + 128 - 2, 2, 4);
 }
+PointSet.prototype.getSpread = function()
+{
+  var total = 0;
+  var thisSet = this;
+  this.points.map(function(p) { total += Math.abs(thisSet.x - p.x) + Math.abs(thisSet.y - p.y); } );
+  return 100 - total / this.points.length;
+}
+
 
 function drawPixel(ctx, rgb, x, y)
 {

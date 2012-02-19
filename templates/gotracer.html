@@ -1,65 +1,98 @@
-<title>Go Tracer</title>
-<style>html, body {margin:0; padding:0; text-align: center;}</style>
+<head>
+<meta name="verify-v1" content="yqTeVksWGzG6l+qNxgcBcOVmbLOkFq9nkusEGBbaz/E=" />
+<title>Go Tracer &ndash; scan the image of a Go board and convert it to an .sgf file</title>
+<link rel="icon" type="image/png" href="/images/favicon.png"/>
 <link href="css/gotracer.css" rel="stylesheet" />
 <script src="js/gotracer.js"></script>
 <script src="js/preview.js"></script>
-
-<body onload="goTracer.startScan(); preview.update(goTracer);">
-
+</head>
+<body onload="goTracer.startScan(); preview.update(goTracer); displayMatch(Math.round(goTracer.getMatch()))">
   <form>
-    <h2 class="step"><span class="number">1. </span>Enter the URL of an image of a go board</h2><br/>
+    <h2 class="step"><span class="number">1. </span>Enter the URL of an image of a go board</h2> (<a href="/?image=http%3A%2F%2Ffarm4.static.flickr.com%2F3148%2F2529170737_3e543331da_o.jpg#201,54,82,549,809,540,690,50">example</a>) <br/>
     <input type="text" class="image-url" name="image" value="{{ image }}" title="enter the url of the image" />
-    <button type="submit" class="trace-button" title="click to load the image">load</button>
+    <button type="submit" class="load">load</button>
+    
+    <div class="notes">
+      compatibility: Firefox 3+, Safari 4+, Chrome 2+, Opera 10+ (because of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#pixel-manipulation">getImageData</a>)
+      |  
+      <a href="mailto:info.gotracer@gmail.com">info.gotracer@gmail.com</a>
+    </div>
   </form>
-  
-  
+
   <table id="canvases" cellpadding="5" class="canvases">
     <tr>
-      <td rowspan="2">
-        <h2 class="step"><span class="number">2. </span>Adjust the corners</h2>
-        <canvas id="image" width="900" height="600" title="click or drag to adjust the corners"></canvas>
+      <td rowspan="3">
+        <h2 class="step"><span class="number">2. </span>Position the 4 corners <span id="match"></span></h2>
+        <canvas id="image" width="900" height="600"></canvas>
       </td>
       <td>
         <h2 class="step"><span class="number">3. </span>Download</h2>
         <div id="preview-background"></div>
-        <canvas id="preview" title="download .sgf file" width="200" height="200" title="preview" onclick="location = 'game.sgf?'+goTracer.getSGF(); return false;"></canvas>
-        <br/>
-        <a class="download" href="#" onclick="location = 'game.sgf?'+goTracer.getSGF(); return false;">download .sgf file</a>
+        <canvas id="preview" width="200" height="200" onclick="downloadSGF(); return false;"></canvas>
+        
+        <!-- <span class="download">&gt; </span><a class="download" href="#" onclick="downloadSGF(); return false;">download .sgf file</a>
+        -->
+        <button class="download" onclick="downloadSGF(); return false;">download</button>
       </td>
     </tr>
     <tr>  
       <td>
+        
         <div class="plotContainer">
-        <h3 class="plotHeader">color plot</h3>
+        <h3 class="plotHeader">sample points</h3>
           <p class="plotExplanation">
-            <canvas id="colorPlot" width="128" height="256" title="color plot"></canvas>
+            <canvas id="colorPlot" width="128" height="256"></canvas>
             This plot shows each of the 361 sample points of the superimposed grid in color space. The x-axis represents intensity while the y-axis
-            represents hue.
+            represents saturation.
             The darkest points, to the left, are interpreted as black stones whereas the lightest points, to the right, are taken to be  white stones. 
             The third group of points at the bottom, which have the most color, must be vacant points.
             If each group is nicely separated from the other groups, the trace will contain no errors.
           </p>
-          </div>
+          
+        </div>
       </td>
+    </tr>
     <tr>
+      <td style="vertical-align: bottom;">
+        <p class="version">v0.29 &ndash; oct 29 2009<p>
+      </td>
+    </tr>
   </table>
-  
-  <div class="footer">
-     compatibility: Firefox 3+, Safari 4 beta, Google Chrome 2 beta (because of <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#pixel-manipulation">getImageData</a>)
-     |  
-     <a href="mailto:info.gotracer@gmail.com">info.gotracer@gmail.com</a>
+
+<!--  
+  <div class="instructions" style="margin: auto; width: 500px; background-color: #d1d5dA; padding:10px;">
+    <h2 class="step">instructions</h2>
+    <br/> 
+    <h2 class="step"><span class="number">1. </span>Enter the URL of an image of a go board</h2>
+    <p>example: <img style="float: left;" src="http://senseis.xmp.net/images/goban-alignright.jpg"> </img> <a href="http://senseis.xmp.net/images/goban-alignright.jpg">http://senseis.xmp.net/images/goban-alignright.jpg<a/>
+      <div style="clear:both;"/>
+    </p>
+    <h2 class="step"><span class="number">2. </span>Position the 4 corners</h2>
+    <p>Drag the 4 crosshairs to match the 4 corners fo the Go board.</p>
+    <h2 class="step"><span class="number">3. </span>Download .sgf</h2>
+    <p>Click on the download link to download the .sgf file of the board position</p>
   </div>
+-->
+
+<!-- Google analytics -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-8243880-1");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+<!-- END Google Analytics -->
+
 </body>
 <script>
-// sorry Sjoerd... I'm just really lazy :-)
-function $(id) {
-    return document.getElementById(id);
-}
-
 var url = "{{ image }}";
 var canvas = document.getElementsByTagName('canvas')[0];
 var canvas2 = $("colorPlot");
 var preview = new Preview($("preview"));
+var timer = null;
 
 var img = new Image();
 img.onerror = function() { 
@@ -67,25 +100,22 @@ img.onerror = function() {
 };
 
 img.onload = function() {
-  $("canvases").style.display = "block";
+  $("canvases").style.display = "table";
+  document.body.style.cursor = "default";
 }
 
 if (url)
+{
+  document.body.style.cursor = "wait";
   img.src = "/fetch?" + url;
+}
 
 var crosshair = new Image();
-crosshair.src = "images/crosshairs.gif";
+crosshair.src = "images/skitch2.png";
 
 var goTracer = new GoTracer(img, canvas, canvas2, crosshair);
 
-var coords = document.location.hash.substr(1).split(",");
-if (coords.length == 8)
-  goTracer.corners = [
-    new Point(1*coords[0], 1*coords[1]),
-    new Point(1*coords[2], 1*coords[3]),
-    new Point(1*coords[4], 1*coords[5]),
-    new Point(1*coords[6], 1*coords[7])
-  ]
+setCorners()
 
 canvas.addEventListener("mousedown", handleDown, false);
 canvas.addEventListener("mouseup", handleUp, false);
@@ -119,21 +149,67 @@ function handleDown(e)
   currentCorner = goTracer.getNearestCorner(p.x, p.y);
   handleMove(e);
 }
+
 function handleMove(e)
 {
   if (!currentCorner)
     return;
-    
+  
   var p = getCoords(e);
   currentCorner.x = p.x;
   currentCorner.y = p.y;
   
+  window.clearTimeout(timer);
+  timer = window.setTimeout(update, 20);
+}
+
+function update()
+{
   goTracer.startScan();
   preview.update(goTracer);
   location = "#" + goTracer.corners;
+  displayMatch(Math.round(goTracer.getMatch()));
 }
+
 function handleUp(e)
 {
   currentCorner = null;
 }
+function downloadSGF()
+{
+  var corners = goTracer.corners.map( function(c) { return c.toString(); } ).toString();
+  location = "game.sgf?corners="+corners + "&match="+Math.round(goTracer.getMatch()) + "&image="+url + "&sgf="+encodeURIComponent(goTracer.getSGF());
+}
+
+// init the corners either to those supplied in the url hash or to those supplied by the server
+function setCorners()
+{
+  var coords = document.location.hash.substr(1).split(",");
+
+  if (coords.length != 8)
+    coords = "{{ corners }}".split(",");
+
+  if (coords.length == 8)
+  {
+    coords = coords.map( function(c) { return 1*c; })
+  
+    goTracer.corners = [
+      new Point(coords[0], coords[1]),
+      new Point(coords[2], coords[3]),
+      new Point(coords[4], coords[5]),
+      new Point(coords[6], coords[7])
+    ];
+  }
+}
+function displayMatch(match)
+{
+  //$("match").innerHTML = "(match " + match + "%)";
+}
+
+function $(id)
+{
+    return document.getElementById(id);
+}
+
+
 </script>

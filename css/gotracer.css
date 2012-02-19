@@ -15,10 +15,9 @@ h1
   margin: 0; padding: 0.2em;
 }
 
-
-
 .step
 {
+  font-size: 160%;
   color: #444444;
   margin:0;
 }
@@ -31,12 +30,66 @@ h1
 
 form
 { 
-  z-index:1;
+  text-align:center;
+  width: 900px;
+  margin: auto;
   background: #FFF9D8;
   border-top: 1px solid #FFE8CD;
   border-bottom: 1px solid #FFE8CD;
-  padding: 1em; margin: 0;
-  margin-bottom:10px;
+  border: 1px solid #aaaaaa;
+  padding: 0.5em;
+  margin-bottom:20px;
+}
+
+.image-url
+{
+  font-size:150%;
+  width: 90%;
+}
+
+button
+{
+  font-size:150%;
+  background-color: #EEEEEE;
+  border: 1px solid #aaaaaa;
+  margin: 1px;
+  color: #444444;
+}
+
+button:hover
+{
+  cursor:hand;
+  background-color: #F4F4F4;
+  color: #505050;
+}
+
+button:active
+{
+  color: #FF2222;
+}
+
+.notes
+{
+  margin-top: 5px;  
+  background: #FFF9D8;
+  color: #888888;
+  text-align:center;
+  font-size: 90%;
+}
+
+.notes a
+{
+  color: #888888;
+}
+
+#canvases
+{
+  margin:auto;
+  display: none;
+  background-color: #d1d5dA;
+  margin-bottom: 20px;
+  border: 1px solid #aaaaaa;
+  padding: 0.5em;
 }
 
 td
@@ -44,34 +97,9 @@ td
   vertical-align: top;
 }
 
-.image-url
-{
-  font-size:150%;
-  width: 800px;
-}
-
-.trace-button,
-.download-button
-{
-  font-size:150%;
-}
-
-#canvases
-{
-  margin-left: auto;
-  margin-right: auto;
-  display: none;
-}
-
 #image
 {
   border: 1px solid #aaaaaa;
-}
-
-.plotContainer
-{
-    background-color: #d1d5dA;
-      padding: 5px 5px 5px 5px; 
 }
 
 .plotHeader
@@ -86,7 +114,7 @@ td
   border: 1px solid #aaaaaa;
   width: 100px;
   height: 100px;
-  float:left;
+  float: left;
   margin-right: 5px;
 }
 
@@ -104,11 +132,12 @@ td
   background-image: url('../images/blank_board.png');
   width: 200px;
   height: 200px;
+  margin-bottom: 5px;
 }
 #preview
 {
   position: absolute;
-  margin-top: -200px;
+  margin-top: -205px;
 }
 
 #preview:hover
@@ -121,21 +150,33 @@ a
   color: #444444;
 }
 
-a.download
+button.download
 {
-  font-size:90%;
+  font-size: 120%;  
+}
+/*.download
+{
+  font-size:120%;
   color: #444444;
-  xfont-style:italic;
+  border: 1px solid #aaaaaa;
+  background-color: #EEEEEE;
+  margin: 1px;
+}
+.download:hover
+{
+  cursor: hand;
+  border: 2px solid red;
+  margin:0; 
+}*/
+#match
+{
+  color: red;
+  font-size:70%;
+  font-weight:normal;
 }
 
-.footer
+.version
 {
-  z-index:1;
-  background: #FFF9D8;
-  color: #444444;
-  border-top: 1px solid #FFE8CD;
-  border-bottom: 1px solid #FFE8CD;
-  padding: 1em; margin: 0;
-  margin-bottom:10px;
-  font-size: 90%;
+  font-size:70%;
+  font-weight: bold;
 }

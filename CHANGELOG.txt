@@ -1,0 +1,21 @@
+v0.29 - 10-29-2009
+------------------
+* changed download link to a button
+* removed the tooltips
+* restyled the buttons
+
+v0.28 - 10-17-2009
+------------------
+* fixed corrupted .sgf
+* catch exception when no traces exist on server
+* improved responsiveness in Opera
+* updated list of compatible browser to drop 'beta' and include Opera
+* added a version in the lower-right corner
+
+v0.27
+-----
+* loading an image w/o corner positions that was already scanned will cause the 'best matching' corner positions to be suggested
+* added Google Analytics
+* replaced crosshairs with a better graphic (courtesey of Joe Goh / Heretix / xorandor)
+
+26 deploys as of april 5th 2009. 

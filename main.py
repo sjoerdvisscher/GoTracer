@@ -1,35 +1,53 @@
 #!/usr/bin/env python
-#
-# Copyright 2007 Google Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#
 
 import wsgiref.handlers
 
 from google.appengine.ext.webapp import template
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
-import os
+import os, logging
+from models.trace import Trace
 
 class MainPage(webapp.RequestHandler):
+  def getTrace(self, image):
+    trace = None
+    query = Trace.all().filter("imageUrl = ", image).order("-match")
+    for result in query.fetch(1):
+      trace = result
+      break    
+      
+    if trace:
+      corners = ",".join( [ str(c) for c in trace.corners] ) 
+      match = str(trace.match)
+      logging.info("found trace: " + str(trace.imageUrl) + ", date:" + str(trace.datetime) + ", corners: " + corners + ", match: " + match  )
+    else:
+      logging.info("no trace for " + str(image))
+    
+    return trace
+  
   def get(self):
-
-    # TODO: get img url from querystring
+    trace = None
+    image = self.request.get("image")
+    if image:
+      try:
+        trace = self.getTrace(image)
+      except Exception, e:
+        logging.error(e)
+        trace = None
+    
+    # log ip & browser
+    logging.info(self.request.remote_addr + ": " + self.request.headers["user-agent"])
+    
     path = os.path.join(os.path.dirname(__file__), 'templates/gotracer.html')
-    self.response.out.write(template.render(path, { "image": self.request.get("image") }))
+    
+    if trace:
+      self.response.out.write(template.render(path, { "image": image, "corners": ",".join( [ str(c) for c in trace.corners] ), "match": str(trace.match) }))
+    else:
+      self.response.out.write(template.render(path, { "image": image }))
+
 
 application = webapp.WSGIApplication([ ('/', MainPage)],debug=True)
+
 
 def main():
   run_wsgi_app(application)
